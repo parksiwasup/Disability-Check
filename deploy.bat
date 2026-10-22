@@ -1,0 +1,65 @@
+@echo off
+chcp 65001 >nul
+title Hospital Disability System - Deployment & Service Launcher
+
+echo =====================================================================
+echo    🏥 HOSPITAL DISABILITY ASSESSMENT & SSO 2-19 AUTO-FILLER
+echo    ระบบประเมินทุพพลภาพและพิมพ์แบบฟอร์ม สปส. 2-19
+echo =====================================================================
+echo.
+
+:: 1. Version Info
+set APP_VERSION=v1.1.0
+echo [INFO] Current Release Version: %APP_VERSION%
+echo.
+
+:: 2. Check Node.js
+where node >nul 2>nul
+if %errorlevel% neq 0 (
+    echo [ERROR] Node.js is not installed or not in PATH!
+    echo Please install Node.js from https://nodejs.org/
+    pause
+    exit /b 1
+)
+
+echo [1/4] Checking and installing Backend dependencies...
+cd /d "%~dp0backend"
+call npm.cmd install
+if %errorlevel% neq 0 (
+    echo [WARN] npm install encountered warnings, continuing...
+)
+
+echo [2/4] Generating Prisma Client and Syncing Database...
+call npx.cmd prisma generate
+call npx.cmd prisma db push
+
+echo [3/4] Checking and building Frontend...
+cd /d "%~dp0frontend"
+call npm.cmd install
+call npm.cmd run build
+
+echo.
+echo =====================================================================
+echo    🚀 STARTING SERVERS...
+echo    • Backend API:  http://localhost:5000
+echo    • Frontend App: http://localhost:5173
+echo =====================================================================
+echo.
+
+:: Start Backend in separate window
+start "Hospital Backend API (Port 5000)" cmd /k "cd /d "%~dp0backend" && npm.cmd run dev"
+
+:: Wait 3 seconds
+timeout /t 3 /nobreak >nul
+
+:: Start Frontend in separate window
+start "Hospital Frontend Web (Port 5173)" cmd /k "cd /d "%~dp0frontend" && npm.cmd run dev"
+
+:: Open default browser to Frontend
+timeout /t 2 /nobreak >nul
+start http://localhost:5173
+
+echo [SUCCESS] System is up and running!
+echo You can manage both servers from their respective terminal windows.
+echo Press any key to close this launcher.
+pause >nul
