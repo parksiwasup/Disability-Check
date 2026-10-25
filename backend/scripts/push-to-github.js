@@ -11,6 +11,35 @@ const rl = readline.createInterface({
 
 const ask = (query) => new Promise((resolve) => rl.question(query, resolve));
 
+function updateReadme(rootDir, version, commitMsg, extraNote) {
+  const readmePath = path.join(rootDir, 'README.md');
+  if (!fs.existsSync(readmePath)) return;
+  let content = fs.readFileSync(readmePath, 'utf8');
+
+  const today = new Date().toLocaleDateString('th-TH', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  const changelogHeader = '## 📝 ประวัติการอัปเดตระบบ (Changelog)';
+  let entryText = `### [${version}] - ${today}\n- ${commitMsg}\n`;
+  if (extraNote && extraNote.trim()) {
+    entryText += `- ${extraNote.trim()}\n`;
+  }
+
+  if (content.includes(changelogHeader)) {
+    if (!content.includes(`[${version}]`)) {
+      content = content.replace(changelogHeader, `${changelogHeader}\n\n${entryText}`);
+    }
+  } else {
+    content += `\n\n---\n\n${changelogHeader}\n\n${entryText}`;
+  }
+
+  fs.writeFileSync(readmePath, content, 'utf8');
+  console.log(`✓ อัปเดตไฟล์ README.md อัตโนมัติ (บันทึกเวอร์ชัน ${version})`);
+}
+
 async function main() {
   const rootDir = path.resolve(__dirname, '../../');
   console.log('=====================================================');
@@ -26,21 +55,45 @@ async function main() {
   const commitMsgInput = await ask(`ข้อความ Commit (กด Enter เพื่อใช้ข้อความเริ่มต้น): `);
   const commitMsg = commitMsgInput.trim() || defaultMsg;
 
+  const extraNote = await ask('รายละเอียดฟังก์ชันใหม่เพิ่มเติมสำหรับบันทึกลง README.md (ถ้าไม่มีกด Enter ได้เลย): ');
+
+  // อัปเดต README.md อัตโนมัติก่อน Push
+  updateReadme(rootDir, version, commitMsg, extraNote);
+
   // 2. GitHub Repo URL (ตั้งค่าเริ่มต้นให้ตรงกับโปรเจกต์ของคุณ)
   const defaultRepo = 'https://github.com/parksiwasup/Disability-Check.git';
   let repoUrl = await ask(`\nป้อน GitHub Repository URL (กด Enter เพื่อใช้ "${defaultRepo}"): `);
   repoUrl = repoUrl.trim() || defaultRepo;
 
   // 3. GitHub Personal Access Token (PAT)
-  console.log('\n💡 คำแนะนำ: สำหรับ GitHub ต้องใช้ Personal Access Token (ไม่ใช่รหัสผ่านทั่วไป)');
-  console.log('   (Token ปกติจะขึ้นต้นด้วย ghp_... สามารถสร้างได้ที่ GitHub -> Settings -> Developer settings -> Personal access tokens)');
-  const token = await ask('ป้อน GitHub Token (ghp_...): ');
+  const tokenFile = path.join(rootDir, '.git-token');
+  let savedToken = '';
+  if (fs.existsSync(tokenFile)) {
+    try {
+      savedToken = fs.readFileSync(tokenFile, 'utf8').trim();
+    } catch (_) {}
+  }
 
-  if (!token.trim()) {
+  let token = '';
+  if (savedToken) {
+    const useSaved = await ask(`\nพบ GitHub Token ที่บันทึกไว้ (${savedToken.slice(0, 7)}...) กด Enter เพื่อใช้งานทันที: `);
+    token = useSaved.trim() || savedToken;
+  } else {
+    console.log('\n💡 คำแนะนำ: สำหรับ GitHub ต้องใช้ Personal Access Token (ไม่ใช่รหัสผ่านทั่วไป)');
+    token = await ask('ป้อน GitHub Token (ghp_...): ');
+    token = token.trim();
+  }
+
+  if (!token) {
     console.error('❌ จำเป็นต้องใช้ GitHub Token ในการยืนยันตัวตนสำหรับ Push');
     rl.close();
     return;
   }
+
+  // บันทึก Token เก็บไว้สำหรับครั้งต่อไป (อยู่ใน .gitignore ไม่ถูกอัปโหลดขึ้น GitHub)
+  try {
+    fs.writeFileSync(tokenFile, token, 'utf8');
+  } catch (_) {}
 
   // 4. Init git repo if not present
   console.log('\n[1/4] ตรวจสอบและตั้งค่า Git Repository...');
@@ -80,8 +133,8 @@ async function main() {
     fs,
     dir: rootDir,
     author: {
-      name: 'Hospital System Admin',
-      email: 'admin@hospital.local'
+      name: 'parksiwasup',
+      email: 'parksiwasup@users.noreply.github.com'
     },
     message: `${commitMsg} (${version})`
   });

@@ -12,6 +12,7 @@ build/
 .env
 */.env
 *.local
+.git-token
 
 # System & IDE files
 .DS_Store
