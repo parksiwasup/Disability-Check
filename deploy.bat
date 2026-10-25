@@ -9,7 +9,7 @@ echo =====================================================================
 echo.
 
 :: 1. Version Info
-set APP_VERSION=v1.1.0
+set APP_VERSION=v1.2.0
 echo [INFO] Current Release Version: %APP_VERSION%
 echo.
 
