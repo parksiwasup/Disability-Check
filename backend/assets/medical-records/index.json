@@ -1,0 +1,34 @@
+{
+  "000090700": [
+    {
+      "id": "MR-1792926364590-9zdwp",
+      "category": "prescription",
+      "isPermanent": false,
+      "patientHn": "000090700",
+      "patientVn": "690909101302",
+      "patientIdCard": "3470500426725",
+      "patientName": "นายรัสมี ลีทอง",
+      "fileName": "000090700_MR-1792926364590-9zdwp.pdf",
+      "originalName": "ตัวอย่างใบสั่งแพทย์.pdf",
+      "size": 270915,
+      "pageCount": 1,
+      "uploadedAt": "2026-10-25T11:06:04.593Z",
+      "url": "/api/patients/PAT-000090700/medical-records/MR-1792926364590-9zdwp"
+    },
+    {
+      "id": "MR-1792929888797-neyi7",
+      "category": "medical_certificate",
+      "isPermanent": false,
+      "patientHn": "000090700",
+      "patientVn": "690909101302",
+      "patientIdCard": "3470500426725",
+      "patientName": "นายรัสมี ลีทอง",
+      "fileName": "000090700_MR-1792929888797-neyi7.pdf",
+      "originalName": "ใบรับรองแพทย์.pdf",
+      "size": 188035,
+      "pageCount": 1,
+      "uploadedAt": "2026-10-25T12:04:48.833Z",
+      "url": "/api/patients/PAT-000090700/medical-records/MR-1792929888797-neyi7"
+    }
+  ]
+}

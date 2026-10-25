@@ -1,0 +1,309 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: url('/fonts/THSarabunNew.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TH Sarabun New';
+  src: url('/fonts/THSarabunNew-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================================================
+   DYNAMIC COLOR TOKENS & AMBIENT MESH SYSTEM
+   ========================================================= */
+
+:root {
+  --primary-rgb: 20, 184, 166;
+  --primary-hex: #14b8a6;
+  --secondary-rgb: 14, 165, 233;
+}
+
+@layer base {
+  body {
+    @apply font-sans;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* 1. EXECUTIVE DEEP NAVY (DEFAULT PROFESSIONAL DARK) */
+:root,
+[data-theme="navy"] {
+  color-scheme: dark;
+}
+
+:root body,
+[data-theme="navy"] body {
+  background-color: #070d18;
+  background-image: 
+    radial-gradient(at 90% 0%, rgba(var(--primary-rgb), 0.20) 0px, transparent 48%),
+    radial-gradient(at 10% 20%, rgba(var(--secondary-rgb), 0.16) 0px, transparent 45%),
+    radial-gradient(at 50% 100%, rgba(var(--primary-rgb), 0.10) 0px, transparent 50%),
+    linear-gradient(to bottom, #070d18, #0a1324);
+  background-attachment: fixed;
+  color: #f1f5f9;
+}
+
+[data-theme="navy"] .glass-panel {
+  background: rgba(11, 20, 38, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(var(--primary-rgb), 0.18);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="navy"] .glass-card {
+  background: rgba(15, 28, 53, 0.68);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--primary-rgb), 0.14);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="navy"] .glass-card:hover {
+  background: rgba(18, 34, 66, 0.90);
+  border-color: rgba(var(--primary-rgb), 0.50);
+  box-shadow: 0 12px 28px -4px rgba(var(--primary-rgb), 0.25);
+}
+
+/* 2. CLINICAL CLEAN LIGHT MODE (HOSPITAL EHR STYLE) */
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="light"] body {
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 95% 5%, rgba(var(--primary-rgb), 0.14) 0px, transparent 42%),
+    radial-gradient(at 5% 15%, rgba(var(--secondary-rgb), 0.09) 0px, transparent 45%),
+    linear-gradient(to bottom, #f8fafc, #f1f5f9);
+  background-attachment: fixed;
+  color: #0f172a;
+}
+
+[data-theme="light"] .glass-panel {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="light"] .glass-card {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  box-shadow: 0 2px 8px -1px rgba(15, 23, 42, 0.04);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] .glass-card:hover {
+  background: #ffffff;
+  border-color: rgba(var(--primary-rgb), 0.50);
+  box-shadow: 0 12px 24px -4px rgba(var(--primary-rgb), 0.18);
+}
+
+[data-theme="light"] header {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .bg-slate-900\/90,
+[data-theme="light"] .bg-slate-900\/80,
+[data-theme="light"] .bg-slate-900\/60,
+[data-theme="light"] .bg-slate-900 {
+  background-color: #ffffff !important;
+}
+
+[data-theme="light"] .bg-slate-800\/80,
+[data-theme="light"] .bg-slate-800\/60,
+[data-theme="light"] .bg-slate-800\/50,
+[data-theme="light"] .bg-slate-800 {
+  background-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] .border-slate-800,
+[data-theme="light"] .border-slate-800\/60,
+[data-theme="light"] .border-slate-700,
+[data-theme="light"] .border-slate-700\/80,
+[data-theme="light"] .border-slate-700\/50 {
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .text-white {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .text-slate-100 {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .text-slate-200 {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .text-slate-300 {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .text-slate-400 {
+  color: #64748b !important;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+/* 3. MINIMALIST SLATE DARK */
+[data-theme="slate"] {
+  color-scheme: dark;
+}
+
+[data-theme="slate"] body {
+  background-color: #0f172a;
+  background-image: 
+    radial-gradient(at 80% 0%, rgba(var(--primary-rgb), 0.18) 0px, transparent 45%),
+    radial-gradient(at 10% 90%, rgba(var(--secondary-rgb), 0.12) 0px, transparent 45%),
+    linear-gradient(to bottom, #0f172a, #111827);
+  background-attachment: fixed;
+  color: #f8fafc;
+}
+
+[data-theme="slate"] .glass-panel {
+  background: rgba(30, 41, 59, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(var(--primary-rgb), 0.15);
+}
+
+[data-theme="slate"] .glass-card {
+  background: rgba(30, 41, 59, 0.68);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(var(--primary-rgb), 0.12);
+}
+
+[data-theme="slate"] .glass-card:hover {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(var(--primary-rgb), 0.45);
+  box-shadow: 0 10px 25px -5px rgba(var(--primary-rgb), 0.20);
+}
+
+/* Accent helper utilities */
+.theme-accent-btn {
+  background-color: var(--primary-hex) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px -2px rgba(var(--primary-rgb), 0.4);
+}
+.theme-accent-btn:hover {
+  filter: brightness(1.1);
+}
+
+.theme-accent-text {
+  color: var(--primary-hex) !important;
+}
+
+.theme-accent-border {
+  border-color: var(--primary-hex) !important;
+}
+
+.theme-accent-badge {
+  background-color: rgba(var(--primary-rgb), 0.12) !important;
+  color: var(--primary-hex) !important;
+  border-color: rgba(var(--primary-rgb), 0.35) !important;
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #070d18;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hex, #0d9488);
+}
+
+/* =========================================================
+   OFFICIAL A4 STANDARD PRINT STYLES (EXACT 210mm x 297mm | ZERO DRIFT)
+   ========================================================= */
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  /* Hide all app chrome, headers, ribbons, toolbars, sidebars, modals */
+  header,
+  nav,
+  aside,
+  footer,
+  button,
+  .no-print,
+  #word-studio-ribbon-container,
+  #word-studio-appbar,
+  #word-studio-ribbon,
+  #word-studio-edit-bar,
+  #word-studio-zoom-bar,
+  #word-studio-sidebar {
+    display: none !important;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Force the A4 paper canvas to exact physical 210mm x 297mm without zoom transforms */
+  .print-a4-canvas {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    z-index: 99999 !important;
+  }
+}

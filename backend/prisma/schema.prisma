@@ -1,0 +1,67 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Patient {
+  id              String      @id @default(uuid())
+  orderNo         Int?
+  hn              String
+  vn              String?
+  idCard          String
+  fullName        String
+  phone           String?
+  nationality     String?     @default("ไทย")
+  treatmentDate   DateTime?
+  treatmentTime   String?
+  visitType       String?
+  department      String?
+  clinicRoom      String?
+  chiefComplaint  String?     @db.Text
+  diagPrimary     String?
+  diagSecondary   String?
+  diagText        String?     @db.Text
+  procedureText   String?     @db.Text
+  hospRight       String?
+  status          String      @default("รอประเมิน")
+  
+  // Disability Assessment fields
+  impairmentRate  Float?      @default(0)
+  disabilityType  String?
+  assessmentNote  String?     @db.Text
+  doctorName      String?
+  doctorLicense   String?
+  evaluatedAt     DateTime?
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([hn])
+  @@index([idCard])
+}
+
+model FieldMapping {
+  id          String   @id @default(uuid())
+  fieldName   String   @unique
+  label       String
+  page        Int      @default(1)
+  x           Float
+  y           Float
+  fontSize    Float    @default(12)
+  fontStyle   String   @default("normal")
+  color       String   @default("#000000")
+  dataSource  String
+  defaultValue String?
+  updatedAt   DateTime @updatedAt
+}
+
+model SystemSetting {
+  key         String   @id
+  value       String   @db.Text
+  description String?
+  updatedAt   DateTime @updatedAt
+}
