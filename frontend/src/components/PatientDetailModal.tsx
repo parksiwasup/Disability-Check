@@ -74,7 +74,9 @@ export const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
             ? 'ใบรับรองแพทย์'
             : uploadCategory === 'sso_document'
               ? 'เอกสารปกส.'
-              : 'เวชระเบียน';
+              : uploadCategory === 'treatment_record'
+                ? 'ใบบันทึกการรับรักษา'
+                : 'เวชระเบียน';
       setSuccessMsg(`แนบไฟล์ PDF ${catLabel}สำเร็จ (${files.length} ไฟล์)`);
       setTimeout(() => setSuccessMsg(''), 3500);
     } catch (err: any) {
@@ -404,6 +406,15 @@ export const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                 <button
                   type="button"
                   disabled={isUploadingPdf}
+                  onClick={() => triggerCategoryUpload('treatment_record')}
+                  className="inline-flex items-center space-x-1 px-3 py-1.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 rounded-xl text-xs font-semibold transition disabled:opacity-50"
+                >
+                  <Upload className="w-3.5 h-3.5" />
+                  <span>+ PDF ใบบันทึกการรับรักษา</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={isUploadingPdf}
                   onClick={() => triggerCategoryUpload('sso_document')}
                   className="inline-flex items-center space-x-1 px-3 py-1.5 bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-semibold transition disabled:opacity-50"
                 >
@@ -440,7 +451,9 @@ export const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                         ? 'ใบรับรองแพทย์'
                         : cat === 'sso_document'
                           ? 'เอกสารปกส.'
-                          : 'เวชระเบียน';
+                          : cat === 'treatment_record'
+                            ? 'ใบบันทึกการรับรักษา'
+                            : 'เวชระเบียน';
                   const catBadgeClass =
                     cat === 'prescription'
                       ? 'bg-cyan-950/60 text-cyan-300 border-cyan-500/40'
@@ -448,7 +461,9 @@ export const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                         ? 'bg-purple-950/60 text-purple-300 border-purple-500/40'
                         : cat === 'sso_document'
                           ? 'bg-amber-950/60 text-amber-300 border-amber-500/40'
-                          : 'bg-emerald-950/60 text-emerald-300 border-emerald-500/40';
+                          : cat === 'treatment_record'
+                            ? 'bg-blue-950/60 text-blue-300 border-blue-500/40'
+                            : 'bg-emerald-950/60 text-emerald-300 border-emerald-500/40';
 
                   return (
                     <div
@@ -465,7 +480,7 @@ export const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
                               <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${catBadgeClass}`}>
                                 {catLabel}
                               </span>
-                              {(cat === 'medical_record' || cat === 'sso_document') && (
+                              {(cat === 'sso_document' || cat === 'treatment_record') && (
                                 <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-teal-950/60 text-teal-300 border border-teal-500/30">
                                   <ShieldCheck className="w-3 h-3 text-teal-400" />
                                   <span>ประจำตัวถาวร</span>
@@ -522,7 +537,7 @@ export const PatientDetailModal: React.FC<PatientDetailModalProps> = ({
 
                           <button
                             type="button"
-                            onClick={() => handleDeleteMedicalPdf(rec.id, rec.originalName, cat === 'medical_record' || cat === 'sso_document')}
+                            onClick={() => handleDeleteMedicalPdf(rec.id, rec.originalName, cat === 'sso_document' || cat === 'treatment_record')}
                             className="p-1.5 bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 hover:text-rose-200 rounded-lg border border-rose-500/30 transition"
                             title="ลบไฟล์เวชระเบียน"
                           >

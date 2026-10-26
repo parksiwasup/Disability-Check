@@ -42,7 +42,19 @@ export const PdfPreviewModal: React.FC<PdfPreviewModalProps> = ({
   const [isDownloadingAll, setIsDownloadingAll] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const medRecords = patient.medicalRecords || [];
+  const categoryPriority: Record<string, number> = {
+    medical_record: 1,
+    prescription: 2,
+    medical_certificate: 3,
+    treatment_record: 4,
+    sso_document: 5
+  };
+  const medRecords = [...(patient.medicalRecords || [])].sort((a, b) => {
+    const pA = categoryPriority[a.category || 'medical_record'] || 99;
+    const pB = categoryPriority[b.category || 'medical_record'] || 99;
+    if (pA !== pB) return pA - pB;
+    return (a.uploadedAt || '').localeCompare(b.uploadedAt || '');
+  });
   const currentIndex = allPatients.findIndex(p => p.id === patient.id);
 
   useEffect(() => {
@@ -342,7 +354,9 @@ export const PdfPreviewModal: React.FC<PdfPreviewModalProps> = ({
                   ? 'ใบรับรองแพทย์'
                   : rec.category === 'sso_document'
                     ? 'เอกสารปกส.'
-                    : 'เวชระเบียน';
+                    : rec.category === 'treatment_record'
+                      ? 'ใบบันทึกการรับรักษา'
+                      : 'เวชระเบียน';
             return (
               <button
                 key={rec.id}

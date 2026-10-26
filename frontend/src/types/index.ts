@@ -1,4 +1,4 @@
-export type MedicalDocumentCategory = 'medical_record' | 'prescription' | 'medical_certificate' | 'sso_document';
+export type MedicalDocumentCategory = 'medical_record' | 'prescription' | 'medical_certificate' | 'sso_document' | 'treatment_record';
 
 export interface MedicalRecordAttachment {
   id: string;

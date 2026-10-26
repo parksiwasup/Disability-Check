@@ -238,6 +238,26 @@ export const CHECKBOX_PRESETS = [
   { id: 'check_doc_summary', label: 'ใบสรุป/ใบแสดงรายการค่ารักษา', section: 'ข้อ 6', x: 79.3, y: 381.47 },
 ];
 
+// Exact slot boundaries on Form สปส. 2-19 for automatic centering on dotted lines
+export const FORM_SLOT_BOUNDARIES: Record<string, { startX: number; endX: number; y?: number }> = {
+  hospName: { startX: 125, endX: 357, y: 689.4 },
+  fullName: { startX: 72, endX: 313, y: 669.8 },
+  treatmentDateStart: { startX: 305, endX: 394, y: 502.3 },
+  treatmentDateEnd: { startX: 431, endX: 565, y: 502.3 },
+  costNumeric: { startX: 105, endX: 235, y: 482.8 },
+  costText: { startX: 255, endX: 561, y: 482.8 },
+  custom_1792848770510: { startX: 445, endX: 563, y: 461.4 },
+  custom_1792848814241: { startX: 85, endX: 250, y: 441.9 },
+  custom_1792848838734: { startX: 360, endX: 563, y: 441.9 },
+  directorName: { startX: 307, endX: 515, y: 322.6 },
+  directorPosition: { startX: 320, endX: 532, y: 302.7 },
+  patientCertifyName: { startX: 256, endX: 465, y: 235.6 },
+  patientSignName: { startX: 307, endX: 497, y: 174.5 },
+  certifyDateDay: { startX: 303, endX: 357, y: 156.0 },
+  certifyDateMonth: { startX: 360, endX: 434, y: 156.0 },
+  certifyDateYear: { startX: 436, endX: 506, y: 156.0 },
+};
+
 export const WordFontStudio: React.FC<WordFontStudioProps> = ({ patients }) => {
   const [mappings, setMappings] = useState<FieldConfig[]>([]);
   const [history, setHistory] = useState<FieldConfig[][]>([]);
@@ -354,7 +374,7 @@ export const WordFontStudio: React.FC<WordFontStudioProps> = ({ patients }) => {
           section: 'คำรับรองผู้ประกันตน',
           key: 'treatmentDate',
           page: 1,
-          x: 324,
+          x: 320,
           y: 156.5,
           fontSize: 16,
           fontFamily: 'THSarabunNew',
@@ -367,7 +387,7 @@ export const WordFontStudio: React.FC<WordFontStudioProps> = ({ patients }) => {
           section: 'คำรับรองผู้ประกันตน',
           key: 'treatmentDate',
           page: 1,
-          x: 386,
+          x: 377.5,
           y: 156.5,
           fontSize: 16,
           fontFamily: 'THSarabunNew',
@@ -380,7 +400,7 @@ export const WordFontStudio: React.FC<WordFontStudioProps> = ({ patients }) => {
           section: 'คำรับรองผู้ประกันตน',
           key: 'treatmentDate',
           page: 1,
-          x: 468,
+          x: 457.5,
           y: 156.5,
           fontSize: 16,
           fontFamily: 'THSarabunNew',
@@ -602,6 +622,55 @@ export const WordFontStudio: React.FC<WordFontStudioProps> = ({ patients }) => {
       }
       return next;
     });
+  };
+
+  const measureTextWidthPt = (text: string, fontSizePt: number, fontFamily: string): number => {
+    if (typeof document === 'undefined') return text.length * fontSizePt * 0.45;
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.font = `${fontSizePt}px '${fontFamily}', 'TH Sarabun New', Sarabun, sans-serif`;
+        const metrics = ctx.measureText(text);
+        if (metrics && metrics.width > 0) {
+          return metrics.width;
+        }
+      }
+    } catch {}
+    return text.length * fontSizePt * 0.42;
+  };
+
+  const handleCenterFieldById = (fieldId: string, currentMappings: FieldConfig[] = mappings): FieldConfig[] => {
+    const field = currentMappings.find(m => m.id === fieldId);
+    if (!field) return currentMappings;
+    const slot = FORM_SLOT_BOUNDARIES[field.id];
+    if (!slot) return currentMappings;
+
+    const text = getDisplayValue(field);
+    const textWidth = measureTextWidthPt(text, field.fontSize || 16, field.fontFamily || 'THSarabunNew');
+    const slotCenter = (slot.startX + slot.endX) / 2;
+    const newX = Math.round((slotCenter - textWidth / 2) * 10) / 10;
+    const newY = slot.y !== undefined ? slot.y : field.y;
+
+    return currentMappings.map(m => m.id === field.id ? { ...m, x: newX, y: newY } : m);
+  };
+
+  const handleCenterCurrentField = () => {
+    if (!activeField) return;
+    pushHistory(mappings);
+    const updated = handleCenterFieldById(activeField.id, mappings);
+    setMappings(updated);
+    setHasChanges(true);
+  };
+
+  const handleCenterAllFields = () => {
+    pushHistory(mappings);
+    let updated = [...mappings];
+    for (const fieldId of Object.keys(FORM_SLOT_BOUNDARIES)) {
+      updated = handleCenterFieldById(fieldId, updated);
+    }
+    setMappings(updated);
+    setHasChanges(true);
   };
 
   const handleAddCustomTextBox = () => {
@@ -1417,6 +1486,28 @@ export const WordFontStudio: React.FC<WordFontStudioProps> = ({ patients }) => {
                 <option value={1.0} className="bg-slate-900 text-white">ทีละ 1pt</option>
                 <option value={3.0} className="bg-slate-900 text-white">ทีละ 3pt</option>
               </select>
+
+              <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 mx-0.5" />
+
+              <button
+                id="btn-center-slot-ribbon"
+                onClick={handleCenterCurrentField}
+                className="flex items-center space-x-1 px-2.5 py-1 bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-bold border border-blue-200 dark:border-blue-800 transition active:scale-95 shadow-sm"
+                title="จัดวางข้อความกึ่งกลางบนเส้นประของช่องนี้อย่างสวยงามพอดี"
+              >
+                <AlignCenter className="w-3.5 h-3.5" />
+                <span>จัดกึ่งกลาง</span>
+              </button>
+
+              <button
+                id="btn-center-all-ribbon"
+                onClick={handleCenterAllFields}
+                className="flex items-center space-x-1 px-2.5 py-1 bg-gradient-to-r from-amber-500/15 to-orange-500/15 hover:from-amber-500/25 hover:to-orange-500/25 text-amber-700 dark:text-amber-300 rounded-lg text-xs font-bold border border-amber-300/40 transition active:scale-95 shadow-sm"
+                title="จัดวางข้อความกึ่งกลางบนเส้นประทุกช่องอัตโนมัติทั้งเอกสาร"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>กึ่งกลางทุกช่อง</span>
+              </button>
             </div>
 
             {/* GROUP 3: แทรกเพิ่ม (Insert Elements) */}
@@ -2171,6 +2262,17 @@ export const WordFontStudio: React.FC<WordFontStudioProps> = ({ patients }) => {
                       />
                     </div>
                   </div>
+
+                  {FORM_SLOT_BOUNDARIES[activeField.id] && (
+                    <button
+                      type="button"
+                      onClick={handleCenterCurrentField}
+                      className="w-full py-2 px-3 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-xl text-xs font-bold border border-blue-200 dark:border-blue-800 transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                    >
+                      <AlignCenter className="w-4 h-4" />
+                      <span>จัดวางกึ่งกลางบนเส้นประอัตโนมัติ</span>
+                    </button>
+                  )}
 
                   {/* Quick Actions in Inspector */}
                   <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2">

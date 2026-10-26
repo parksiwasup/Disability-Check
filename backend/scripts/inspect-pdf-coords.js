@@ -19,8 +19,8 @@ async function run() {
     }))
     .sort((a, b) => b.y - a.y || a.x - b.x);
 
-  console.log(`=== UPPER HALF (y >= 530) ===`);
-  items.filter(it => it.y >= 530).forEach(it => {
+  console.log(`=== ALL ITEMS ===`);
+  items.forEach(it => {
     console.log(`y: ${it.y.toFixed(1).padStart(5)}, x: ${it.x.toFixed(1).padStart(5)}, w: ${it.width.toFixed(1).padStart(5)} | "${it.str}"`);
   });
 }

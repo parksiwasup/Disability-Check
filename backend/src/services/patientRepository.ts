@@ -5,7 +5,7 @@ import { PDFDocument } from 'pdf-lib';
 import { prisma } from '../config/db';
 import { thaiBahtText } from '../utils/thaiBaht';
 
-export type MedicalDocumentCategory = 'medical_record' | 'prescription' | 'medical_certificate' | 'sso_document';
+export type MedicalDocumentCategory = 'medical_record' | 'prescription' | 'medical_certificate' | 'sso_document' | 'treatment_record';
 
 export interface MedicalRecordAttachment {
   id: string;
@@ -136,7 +136,7 @@ function getRecordsForPatientFromIndex(
     for (const item of list) {
       if (seenIds.has(item.id)) continue;
       const cat = item.category || 'medical_record';
-      const isPerm = cat === 'medical_record' || cat === 'sso_document';
+      const isPerm = cat === 'sso_document' || cat === 'treatment_record';
       const itemNormHn = normalizeHn(item.patientHn);
       const itemIdCard = String(item.patientIdCard || '').replace(/\D/g, '');
       const itemVn = String(item.patientVn || '').trim();
@@ -173,6 +173,21 @@ function getRecordsForPatientFromIndex(
       }
     }
   }
+
+  const categoryPriority: Record<MedicalDocumentCategory, number> = {
+    medical_record: 1,
+    prescription: 2,
+    medical_certificate: 3,
+    treatment_record: 4,
+    sso_document: 5
+  };
+
+  result.sort((a, b) => {
+    const pA = categoryPriority[a.category || 'medical_record'] || 99;
+    const pB = categoryPriority[b.category || 'medical_record'] || 99;
+    if (pA !== pB) return pA - pB;
+    return (a.uploadedAt || '').localeCompare(b.uploadedAt || '');
+  });
 
   return result;
 }
@@ -350,7 +365,10 @@ export const patientRepository = {
     const list: MedicalRecordAttachment[] = index[key] || [];
 
     const validCategory: MedicalDocumentCategory =
-      category === 'prescription' || category === 'medical_certificate' || category === 'sso_document'
+      category === 'prescription' ||
+      category === 'medical_certificate' ||
+      category === 'sso_document' ||
+      category === 'treatment_record'
         ? category
         : 'medical_record';
 
@@ -381,7 +399,9 @@ export const patientRepository = {
         // Ignore if page count cannot be read
       }
 
-      const isPermanentCategory = validCategory === 'medical_record' || validCategory === 'sso_document';
+      const isPermanentCategory =
+        validCategory === 'sso_document' ||
+        validCategory === 'treatment_record';
 
       const attachment: MedicalRecordAttachment = {
         id: recId,

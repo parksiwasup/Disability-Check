@@ -146,6 +146,8 @@ export const api = {
         return 'ใบสั่งยา';
       case 'medical_certificate':
         return 'ใบรับรองแพทย์';
+      case 'treatment_record':
+        return 'ใบบันทึกการรับรักษา';
       default:
         return 'เวชระเบียน';
     }
@@ -181,9 +183,10 @@ export const api = {
 
     const categoryOrder: MedicalDocumentCategory[] = [
       'medical_record',
-      'sso_document',
       'prescription',
-      'medical_certificate'
+      'medical_certificate',
+      'treatment_record',
+      'sso_document'
     ];
 
     const records = patient.medicalRecords || [];
@@ -228,9 +231,10 @@ export const api = {
     // 2. เอกสารแนบทั้ง 4 หมวด
     const categoryOrder: MedicalDocumentCategory[] = [
       'medical_record',
-      'sso_document',
       'prescription',
-      'medical_certificate'
+      'medical_certificate',
+      'treatment_record',
+      'sso_document'
     ];
     const records = patient.medicalRecords || [];
 
@@ -288,9 +292,10 @@ export const api = {
       // 2. เอกสารแนบ
       const categoryOrder: MedicalDocumentCategory[] = [
         'medical_record',
-        'sso_document',
         'prescription',
-        'medical_certificate'
+        'medical_certificate',
+        'treatment_record',
+        'sso_document'
       ];
       const records = patient.medicalRecords || [];
 

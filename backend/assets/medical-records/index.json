@@ -1,34 +1,77 @@
 {
   "000090700": [
     {
-      "id": "MR-1792926364590-9zdwp",
-      "category": "prescription",
-      "isPermanent": false,
-      "patientHn": "000090700",
-      "patientVn": "690909101302",
-      "patientIdCard": "3470500426725",
-      "patientName": "นายรัสมี ลีทอง",
-      "fileName": "000090700_MR-1792926364590-9zdwp.pdf",
-      "originalName": "ตัวอย่างใบสั่งแพทย์.pdf",
-      "size": 270915,
-      "pageCount": 1,
-      "uploadedAt": "2026-10-25T11:06:04.593Z",
-      "url": "/api/patients/PAT-000090700/medical-records/MR-1792926364590-9zdwp"
-    },
-    {
-      "id": "MR-1792929888797-neyi7",
+      "id": "MR-1792984515735-tbyh5",
       "category": "medical_certificate",
       "isPermanent": false,
       "patientHn": "000090700",
       "patientVn": "690909101302",
       "patientIdCard": "3470500426725",
       "patientName": "นายรัสมี ลีทอง",
-      "fileName": "000090700_MR-1792929888797-neyi7.pdf",
-      "originalName": "ใบรับรองแพทย์.pdf",
-      "size": 188035,
+      "fileName": "000090700_MR-1792984515735-tbyh5.pdf",
+      "originalName": "นายรัสมี  ลีทอง ใบรับรองแพทย์.pdf",
+      "size": 53388,
       "pageCount": 1,
-      "uploadedAt": "2026-10-25T12:04:48.833Z",
-      "url": "/api/patients/PAT-000090700/medical-records/MR-1792929888797-neyi7"
+      "uploadedAt": "2026-10-26T03:15:15.741Z",
+      "url": "/api/patients/PAT-000090700/medical-records/MR-1792984515735-tbyh5"
+    },
+    {
+      "id": "MR-1792984520897-yuli0",
+      "category": "prescription",
+      "isPermanent": false,
+      "patientHn": "000090700",
+      "patientVn": "690909101302",
+      "patientIdCard": "3470500426725",
+      "patientName": "นายรัสมี ลีทอง",
+      "fileName": "000090700_MR-1792984520897-yuli0.pdf",
+      "originalName": "นายรัสมี  ลีทอง ใบค่ารักษา.pdf",
+      "size": 158040,
+      "pageCount": 1,
+      "uploadedAt": "2026-10-26T03:15:20.901Z",
+      "url": "/api/patients/PAT-000090700/medical-records/MR-1792984520897-yuli0"
+    },
+    {
+      "id": "MR-1792984524133-wlo4u",
+      "category": "sso_document",
+      "isPermanent": true,
+      "patientHn": "000090700",
+      "patientIdCard": "3470500426725",
+      "patientName": "นายรัสมี ลีทอง",
+      "fileName": "000090700_MR-1792984524133-wlo4u.pdf",
+      "originalName": "นายรัสมี  ลีทอง ปกส..pdf",
+      "size": 113954,
+      "pageCount": 1,
+      "uploadedAt": "2026-10-26T03:15:24.145Z",
+      "url": "/api/patients/PAT-000090700/medical-records/MR-1792984524133-wlo4u"
+    },
+    {
+      "id": "MR-1792984531150-cs3p0",
+      "category": "medical_record",
+      "isPermanent": false,
+      "patientHn": "000090700",
+      "patientVn": "690909101302",
+      "patientIdCard": "3470500426725",
+      "patientName": "นายรัสมี ลีทอง",
+      "fileName": "000090700_MR-1792984531150-cs3p0.pdf",
+      "originalName": "นายรัสมี  ลีทอง เวชระเบียน.pdf",
+      "size": 310116,
+      "pageCount": 1,
+      "uploadedAt": "2026-10-26T03:15:31.156Z",
+      "url": "/api/patients/PAT-000090700/medical-records/MR-1792984531150-cs3p0"
+    },
+    {
+      "id": "MR-1792989052310-oxe10",
+      "category": "treatment_record",
+      "isPermanent": true,
+      "patientHn": "000090700",
+      "patientIdCard": "3470500426725",
+      "patientName": "นายรัสมี ลีทอง",
+      "fileName": "000090700_MR-1792989052310-oxe10.pdf",
+      "originalName": "นายรัสมี  ลีทอง.pdf",
+      "size": 160380,
+      "pageCount": 1,
+      "uploadedAt": "2026-10-26T04:30:52.316Z",
+      "url": "/api/patients/PAT-000090700/medical-records/MR-1792989052310-oxe10"
     }
   ]
 }

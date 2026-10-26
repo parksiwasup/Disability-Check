@@ -120,7 +120,9 @@ export const patientController = {
             ? 'ใบรับรองแพทย์'
             : rawCategory === 'sso_document'
               ? 'เอกสารปกส.'
-              : 'เวชระเบียน';
+              : rawCategory === 'treatment_record'
+                ? 'ใบบันทึกการรับรักษา'
+                : 'เวชระเบียน';
 
       res.json({
         success: true,
@@ -150,7 +152,9 @@ export const patientController = {
             ? 'ใบรับรองแพทย์'
             : cat === 'sso_document'
               ? 'เอกสารปกส'
-              : 'เวชระเบียน';
+              : cat === 'treatment_record'
+                ? 'ใบบันทึกการรับรักษา'
+                : 'เวชระเบียน';
 
       const downloadFileName =
         isDownload && patient

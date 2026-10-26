@@ -47,23 +47,44 @@ async function main() {
   console.log('=====================================================');
   console.log(`Repository Directory: ${rootDir}\n`);
 
+  const args = process.argv.slice(2);
+  const autoYes = args.includes('--yes') || args.includes('-y');
+  let cliVersion = '';
+  let cliMsg = '';
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--version' || args[i] === '-v') cliVersion = args[i + 1];
+    if (args[i] === '--message' || args[i] === '-m') cliMsg = args[i + 1];
+  }
+
   // 1. Get Version & Commit details
-  const versionInput = await ask('ป้อนเลขเวอร์ชัน (กด Enter เพื่อใช้ v1.2.0): ');
-  const version = versionInput.trim() || 'v1.2.0';
+  let version = 'v1.3.0';
+  let commitMsg = 'Release v1.3.0: เพิ่มตัวกรองวันที่/เดือนแบบไทย, จัดระเบียบการเรียงไฟล์ PDF 5 หมวด และปรับพิกัดกึ่งกลางเส้นประ';
+  let extraNote = '';
 
-  const defaultMsg = `Release ${version}: อัปเดตระบบแนบไฟล์ PDF เวชระเบียนถาวร, ดาวน์โหลดแยก 5 ไฟล์ตามชื่อบุคคล, โหลด .ZIP ครบชุด`;
-  const commitMsgInput = await ask(`ข้อความ Commit (กด Enter เพื่อใช้ข้อความเริ่มต้น): `);
-  const commitMsg = commitMsgInput.trim() || defaultMsg;
+  if (autoYes) {
+    version = cliVersion || version;
+    commitMsg = cliMsg || commitMsg;
+  } else {
+    const versionInput = await ask(`ป้อนเลขเวอร์ชัน (กด Enter เพื่อใช้ ${version}): `);
+    version = versionInput.trim() || version;
 
-  const extraNote = await ask('รายละเอียดฟังก์ชันใหม่เพิ่มเติมสำหรับบันทึกลง README.md (ถ้าไม่มีกด Enter ได้เลย): ');
+    const defaultMsg = `Release ${version}: อัปเดตระบบแนบไฟล์ PDF เวชระเบียนถาวร, ตัวกรองวันที่/เดือนแบบไทย, จัดพิกัดแบบฟอร์มกึ่งกลางเส้นประ`;
+    const commitMsgInput = await ask(`ข้อความ Commit (กด Enter เพื่อใช้ข้อความเริ่มต้น): `);
+    commitMsg = commitMsgInput.trim() || defaultMsg;
+
+    extraNote = await ask('รายละเอียดฟังก์ชันใหม่เพิ่มเติมสำหรับบันทึกลง README.md (ถ้าไม่มีกด Enter ได้เลย): ');
+  }
 
   // อัปเดต README.md อัตโนมัติก่อน Push
   updateReadme(rootDir, version, commitMsg, extraNote);
 
   // 2. GitHub Repo URL (ตั้งค่าเริ่มต้นให้ตรงกับโปรเจกต์ของคุณ)
   const defaultRepo = 'https://github.com/parksiwasup/Disability-Check.git';
-  let repoUrl = await ask(`\nป้อน GitHub Repository URL (กด Enter เพื่อใช้ "${defaultRepo}"): `);
-  repoUrl = repoUrl.trim() || defaultRepo;
+  let repoUrl = defaultRepo;
+  if (!autoYes) {
+    const repoUrlInput = await ask(`\nป้อน GitHub Repository URL (กด Enter เพื่อใช้ "${defaultRepo}"): `);
+    repoUrl = repoUrlInput.trim() || defaultRepo;
+  }
 
   // 3. GitHub Personal Access Token (PAT)
   const tokenFile = path.join(rootDir, '.git-token');
@@ -74,14 +95,16 @@ async function main() {
     } catch (_) {}
   }
 
-  let token = '';
-  if (savedToken) {
-    const useSaved = await ask(`\nพบ GitHub Token ที่บันทึกไว้ (${savedToken.slice(0, 7)}...) กด Enter เพื่อใช้งานทันที: `);
-    token = useSaved.trim() || savedToken;
-  } else {
-    console.log('\n💡 คำแนะนำ: สำหรับ GitHub ต้องใช้ Personal Access Token (ไม่ใช่รหัสผ่านทั่วไป)');
-    token = await ask('ป้อน GitHub Token (ghp_...): ');
-    token = token.trim();
+  let token = savedToken;
+  if (!autoYes) {
+    if (savedToken) {
+      const useSaved = await ask(`\nพบ GitHub Token ที่บันทึกไว้ (${savedToken.slice(0, 7)}...) กด Enter เพื่อใช้งานทันที: `);
+      token = useSaved.trim() || savedToken;
+    } else {
+      console.log('\n💡 คำแนะนำ: สำหรับ GitHub ต้องใช้ Personal Access Token (ไม่ใช่รหัสผ่านทั่วไป)');
+      token = await ask('ป้อน GitHub Token (ghp_...): ');
+      token = token.trim();
+    }
   }
 
   if (!token) {
